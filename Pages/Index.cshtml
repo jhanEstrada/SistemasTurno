@@ -1,0 +1,598 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Iniciar sesión - SIGEF";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="icon" type="image/png" href="~/Img/LogoSigef.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+            :root {
+                --sigef-deep: #061a30;
+                --sigef-primary: #0f4c81;
+                --sigef-accent: #17c9ac;
+                --sigef-accent-2: #2b8fe0;
+                --sigef-ink: #0c2338;
+                --sigef-muted: #7c93a8;
+                --sigef-border: rgba(255,255,255,0.14);
+                --sigef-danger: #ff6b6b;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            html, body {
+                height: 100%;
+                margin: 0;
+                font-family: 'Manrope', 'Segoe UI', sans-serif;
+            }
+
+            body {
+                min-height: 100vh;
+                position: relative;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 32px;
+                background: radial-gradient(ellipse at top, #0d3358 0%, #061a30 55%, #030d19 100%);
+                overflow: hidden;
+            }
+
+            /* ---------- Fondo con manchas de luz animadas (no particulas) ---------- */
+            .sigef-glow {
+                position: absolute;
+                border-radius: 50%;
+                filter: blur(90px);
+                opacity: 0.55;
+                z-index: 0;
+                animation: sigef-drift 16s ease-in-out infinite;
+            }
+
+                .sigef-glow.g1 {
+                    width: 620px;
+                    height: 620px;
+                    background: radial-gradient(circle, #17c9ac, transparent 70%);
+                    top: -220px;
+                    left: -160px;
+                    animation-delay: 0s;
+                }
+
+                .sigef-glow.g2 {
+                    width: 560px;
+                    height: 560px;
+                    background: radial-gradient(circle, #2b8fe0, transparent 70%);
+                    bottom: -240px;
+                    right: -140px;
+                    animation-delay: -6s;
+                }
+
+                .sigef-glow.g3 {
+                    width: 380px;
+                    height: 380px;
+                    background: radial-gradient(circle, #6d5bd0, transparent 70%);
+                    top: 40%;
+                    right: 8%;
+                    opacity: 0.35;
+                    animation-delay: -11s;
+                }
+
+            @@keyframes sigef-drift {
+                0%, 100% {
+                    transform: translate(0, 0) scale(1);
+                }
+
+                50% {
+                    transform: translate(40px, -30px) scale(1.08);
+                }
+            }
+
+            .sigef-grid-overlay {
+                position: absolute;
+                inset: 0;
+                background-image: linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+                background-size: 46px 46px;
+                mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.8), transparent 75%);
+                z-index: 0;
+            }
+
+            /* ---------- Marca superior ---------- */
+            .sigef-top-bar {
+                position: fixed;
+                top: 26px;
+                left: 0;
+                right: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 9px;
+                font-size: 12.5px;
+                font-weight: 700;
+                color: rgba(255,255,255,0.65);
+                letter-spacing: 1px;
+                text-transform: uppercase;
+                z-index: 2;
+            }
+
+                .sigef-top-bar .dot {
+                    width: 6px;
+                    height: 6px;
+                    border-radius: 50%;
+                    background: var(--sigef-accent);
+                    box-shadow: 0 0 10px var(--sigef-accent);
+                }
+
+            /* ---------- Encabezado grande detras/al lado ---------- */
+            .sigef-hero-text {
+                position: relative;
+                z-index: 1;
+                max-width: 380px;
+                margin-right: 56px;
+                color: #fff;
+            }
+
+                .sigef-hero-text .eyebrow {
+                    font-size: 12.5px;
+                    font-weight: 800;
+                    letter-spacing: 2px;
+                    color: var(--sigef-accent);
+                    text-transform: uppercase;
+                    margin-bottom: 18px;
+                }
+
+                .sigef-hero-text h1 {
+                    font-size: 44px;
+                    font-weight: 900;
+                    line-height: 1.12;
+                    margin: 0 0 20px;
+                    letter-spacing: -0.5px;
+                }
+
+                    .sigef-hero-text h1 span {
+                        background: linear-gradient(120deg, var(--sigef-accent), var(--sigef-accent-2));
+                        -webkit-background-clip: text;
+                        background-clip: text;
+                        color: transparent;
+                    }
+
+                .sigef-hero-text p {
+                    font-size: 15px;
+                    line-height: 1.7;
+                    color: rgba(255,255,255,0.6);
+                    margin: 0 0 28px;
+                }
+
+            .sigef-hero-modules {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+                .sigef-hero-modules span {
+                    font-size: 11.5px;
+                    font-weight: 700;
+                    padding: 7px 13px;
+                    border-radius: 30px;
+                    background: rgba(255,255,255,0.06);
+                    border: 1px solid rgba(255,255,255,0.14);
+                    color: rgba(255,255,255,0.85);
+                }
+
+            /* ---------- Contenedor central ---------- */
+            .sigef-stage {
+                position: relative;
+                z-index: 1;
+                display: flex;
+                align-items: center;
+            }
+
+            /* ---------- Tarjeta cristal ---------- */
+            .sigef-card {
+                width: 420px;
+                background: rgba(13, 32, 54, 0.55);
+                backdrop-filter: blur(22px);
+                -webkit-backdrop-filter: blur(22px);
+                border: 1px solid rgba(255,255,255,0.14);
+                border-radius: 24px;
+                padding: 40px 38px 32px;
+                box-shadow: 0 30px 70px -20px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.03) inset;
+                position: relative;
+            }
+
+                .sigef-card::before {
+                    content: "";
+                    position: absolute;
+                    inset: 0;
+                    border-radius: 24px;
+                    padding: 1px;
+                    background: linear-gradient(140deg, rgba(23,201,172,0.5), rgba(255,255,255,0) 35%, rgba(43,143,224,0.4));
+                    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+                    -webkit-mask-composite: xor;
+                    mask-composite: exclude;
+                    pointer-events: none;
+                }
+
+            .sigef-logo-circle {
+                width: 84px;
+                height: 84px;
+                border-radius: 50%;
+                margin: 0 auto 18px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: linear-gradient(160deg, #ffffff, #dfeaf3);
+                box-shadow: 0 0 0 6px rgba(23, 201, 172, 0.12), 0 0 34px rgba(23, 201, 172, 0.35), 0 10px 24px -8px rgba(0,0,0,0.4);
+                position: relative;
+            }
+
+                .sigef-logo-circle img {
+                    width: 58px;
+                    height: 58px;
+                    object-fit: contain;
+                    border-radius: 50%;
+                }
+
+            .sigef-title-block {
+                text-align: center;
+                margin-bottom: 26px;
+            }
+
+                .sigef-title-block .system-name {
+                    font-size: 11.5px;
+                    font-weight: 800;
+                    letter-spacing: 2px;
+                    color: var(--sigef-accent);
+                    text-transform: uppercase;
+                    margin-bottom: 8px;
+                }
+
+                .sigef-title-block h2 {
+                    font-size: 22px;
+                    font-weight: 800;
+                    color: #fff;
+                    margin: 0 0 6px;
+                }
+
+                .sigef-title-block .sub {
+                    font-size: 13px;
+                    color: rgba(255,255,255,0.5);
+                    margin: 0;
+                }
+
+            .sigef-field {
+                margin-bottom: 16px;
+            }
+
+                .sigef-field label {
+                    display: block;
+                    font-size: 12.5px;
+                    font-weight: 700;
+                    color: rgba(255,255,255,0.8);
+                    margin-bottom: 7px;
+                }
+
+            .sigef-input-wrap {
+                position: relative;
+                display: flex;
+                align-items: center;
+            }
+
+                .sigef-input-wrap .icon {
+                    position: absolute;
+                    left: 14px;
+                    width: 18px;
+                    height: 18px;
+                    color: rgba(255,255,255,0.45);
+                    pointer-events: none;
+                }
+
+                .sigef-input-wrap input {
+                    width: 100%;
+                    padding: 12px 14px 12px 42px;
+                    border-radius: 12px;
+                    border: 1.5px solid rgba(255,255,255,0.14);
+                    font-size: 14.5px;
+                    font-family: inherit;
+                    color: #fff;
+                    background: rgba(255,255,255,0.06);
+                    outline: none;
+                    transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+                }
+
+                    .sigef-input-wrap input::placeholder {
+                        color: rgba(255,255,255,0.35);
+                    }
+
+                    .sigef-input-wrap input:focus {
+                        border-color: var(--sigef-accent);
+                        background: rgba(255,255,255,0.09);
+                        box-shadow: 0 0 0 3px rgba(23, 201, 172, 0.18);
+                    }
+
+                    .sigef-input-wrap input[type="password"] {
+                        padding-right: 42px;
+                    }
+
+            .toggle-pwd {
+                position: absolute;
+                right: 12px;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 4px;
+                display: flex;
+                align-items: center;
+                color: rgba(255,255,255,0.45);
+                border-radius: 6px;
+            }
+
+                .toggle-pwd:hover {
+                    color: #fff;
+                }
+
+                .toggle-pwd svg {
+                    width: 19px;
+                    height: 19px;
+                }
+
+            .sigef-row-between {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin: -2px 0 20px;
+                font-size: 12.5px;
+            }
+
+            .sigef-remember {
+                display: flex;
+                align-items: center;
+                gap: 7px;
+                color: rgba(255,255,255,0.55);
+                font-weight: 500;
+            }
+
+                .sigef-remember input {
+                    width: 15px;
+                    height: 15px;
+                    accent-color: var(--sigef-accent);
+                }
+
+            .sigef-link {
+                color: var(--sigef-accent);
+                text-decoration: none;
+                font-weight: 700;
+            }
+
+                .sigef-link:hover {
+                    text-decoration: underline;
+                }
+
+            .sigef-btn {
+                width: 100%;
+                padding: 13.5px;
+                border: none;
+                border-radius: 12px;
+                background: linear-gradient(135deg, var(--sigef-accent-2), var(--sigef-accent));
+                color: #04121f;
+                font-size: 15px;
+                font-weight: 800;
+                font-family: inherit;
+                cursor: pointer;
+                transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
+                box-shadow: 0 10px 26px -6px rgba(23, 201, 172, 0.5);
+            }
+
+                .sigef-btn:hover {
+                    filter: brightness(1.08);
+                    transform: translateY(-1px);
+                }
+
+                .sigef-btn:active {
+                    transform: translateY(1px);
+                }
+
+            .sigef-divider {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin: 22px 0 16px;
+                color: rgba(255,255,255,0.35);
+                font-size: 11px;
+                font-weight: 700;
+                letter-spacing: 0.5px;
+            }
+
+                .sigef-divider::before,
+                .sigef-divider::after {
+                    content: "";
+                    flex: 1;
+                    height: 1px;
+                    background: rgba(255,255,255,0.14);
+                }
+
+            .sigef-create {
+                text-align: center;
+                font-size: 13px;
+                color: rgba(255,255,255,0.5);
+            }
+
+                .sigef-create a {
+                    color: #fff;
+                    font-weight: 800;
+                    text-decoration: none;
+                    border-bottom: 1px solid var(--sigef-accent);
+                }
+
+            .sigef-alert {
+                display: none;
+                align-items: center;
+                gap: 8px;
+                background: rgba(255,107,107,0.12);
+                border: 1px solid rgba(255,107,107,0.35);
+                color: #ffb3b3;
+                font-size: 13px;
+                font-weight: 600;
+                padding: 10px 12px;
+                border-radius: 10px;
+                margin-bottom: 16px;
+            }
+
+            .sigef-footer {
+                text-align: center;
+                margin-top: 22px;
+                font-size: 11px;
+                color: rgba(255,255,255,0.35);
+                font-weight: 600;
+                letter-spacing: 0.2px;
+            }
+
+                .sigef-footer strong {
+                    color: rgba(255,255,255,0.65);
+                    font-weight: 800;
+                }
+
+            @@media (max-width: 900px) {
+                .sigef-hero-text {
+                    display: none;
+                }
+            }
+
+            @@media (max-width: 480px) {
+                .sigef-card {
+                    width: 100%;
+                    padding: 34px 24px 26px;
+                }
+            }
+    </style>
+</head>
+<body>
+
+    <div class="sigef-glow g1"></div>
+    <div class="sigef-glow g2"></div>
+    <div class="sigef-glow g3"></div>
+    <div class="sigef-grid-overlay"></div>
+
+    <div class="sigef-top-bar">
+        <span class="dot"></span>
+        SIGEF · Sistema Integral de Gestión Farmacéutica
+    </div>
+
+    <div class="sigef-stage">
+
+        <div class="sigef-hero-text">
+            <div class="eyebrow">Plataforma farmacéutica</div>
+            <h1>Control total,<br /><span>cero fricción.</span></h1>
+            <p>
+                Dispensación, inventario, pendientes, reportes, indicadores
+                y kardex operando en tiempo real desde un solo sistema.
+            </p>
+            <div class="sigef-hero-modules">
+                <span>Dispensación</span>
+                <span>Inventario</span>
+                <span>Pendientes</span>
+                <span>Reportes</span>
+                <span>Indicadores</span>
+                <span>Kardex</span>
+            </div>
+        </div>
+
+        <div class="sigef-card">
+
+            <div class="sigef-logo-circle">
+                <img src="~/Img/LogoSigef.png" alt="Logo SIGEF" />
+            </div>
+
+            <div class="sigef-title-block">
+                <div class="system-name">Acceso al sistema</div>
+                <h2>Bienvenido de nuevo</h2>
+                <p class="sub">Ingresa tus credenciales para continuar</p>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+            {
+                <div class="sigef-alert" style="display:flex;">
+                    <span>@Model.ErrorMessage</span>
+                </div>
+            }
+
+            <form method="post" id="loginForm" autocomplete="off">
+
+                <div class="sigef-field">
+                    <label for="Username">Número de documento</label>
+                    <div class="sigef-input-wrap">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                        </svg>
+                        <input type="text" id="Username" name="Username" placeholder="Ingresa tu número de documento" inputmode="numeric" required />
+                    </div>
+                </div>
+
+                <div class="sigef-field">
+                    <label for="Password">Contraseña</label>
+                    <div class="sigef-input-wrap">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" />
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                        </svg>
+                        <input type="password" id="Password" name="Password" placeholder="Ingresa tu contraseña" required />
+                        <button type="button" class="toggle-pwd" id="togglePwd" aria-label="Mostrar contraseña">
+                            <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z" />
+                                <circle cx="12" cy="12" r="3" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="sigef-row-between">
+                    <label class="sigef-remember">
+                        <input type="checkbox" name="RememberMe" />
+                        Recordarme
+                    </label>
+                    <a href="/OlvideContrasena" class="sigef-link">¿Olvidaste tu contraseña?</a>
+                </div>
+
+                <button type="submit" class="sigef-btn">Iniciar sesión</button>
+
+                <div class="sigef-divider">¿PRIMERA VEZ EN SIGEF?</div>
+
+                <div class="sigef-create">
+                    ¿No tienes una cuenta? <a href="/CrearUsuario">Crear usuario</a>
+                </div>
+
+            </form>
+
+            <div class="sigef-footer">
+                Desarrollado por <strong>Jhan Estrada</strong>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+            const togglePwd = document.getElementById('togglePwd');
+            const pwdInput = document.getElementById('Password');
+            const eyeIcon = document.getElementById('eyeIcon');
+
+            const eyeOpen = '<path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/>';
+            const eyeClosed = '<path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-11-7-11-7a21.6 21.6 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 7 11 7a21.6 21.6 0 0 1-3.22 4.41M14.12 14.12a3 3 0 1 1-4.24-4.24"/><path d="M1 1l22 22"/>';
+
+            togglePwd.addEventListener('click', function () {
+                const isPassword = pwdInput.type === 'password';
+                pwdInput.type = isPassword ? 'text' : 'password';
+                eyeIcon.innerHTML = isPassword ? eyeClosed : eyeOpen;
+                togglePwd.setAttribute('aria-label', isPassword ? 'Ocultar contraseña' : 'Mostrar contraseña');
+            });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,701 @@
+﻿@page
+@model SIGEF.Pages.Beneficiarios.CrearModel
+@{
+    ViewData["Title"] = "Crear beneficiario - SIGEF";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="icon" type="image/png" href="~/Img/LogoSigef.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+            :root {
+                --sigef-deep: #061a30;
+                --sigef-primary: #0f4c81;
+                --sigef-accent: #17c9ac;
+                --sigef-accent-2: #2b8fe0;
+                --sigef-ink: #0c2338;
+                --sigef-muted: #7c93a8;
+                --sigef-border: rgba(255,255,255,0.14);
+                --sigef-danger: #ff6b6b;
+                --sigef-ok: #3ddc97;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            html, body {
+                height: 100%;
+                margin: 0;
+                font-family: 'Manrope', 'Segoe UI', sans-serif;
+            }
+
+            body {
+                min-height: 100vh;
+                position: relative;
+                background: radial-gradient(ellipse at top, #0d3358 0%, #061a30 55%, #030d19 100%);
+                color: #fff;
+                padding: 28px 20px 60px;
+            }
+
+            .sigef-glow {
+                position: fixed;
+                border-radius: 50%;
+                filter: blur(100px);
+                opacity: 0.32;
+                z-index: 0;
+                pointer-events: none;
+            }
+
+                .sigef-glow.g1 {
+                    width: 560px;
+                    height: 560px;
+                    background: radial-gradient(circle, #17c9ac, transparent 70%);
+                    top: -220px;
+                    left: -160px;
+                }
+
+                .sigef-glow.g2 {
+                    width: 520px;
+                    height: 520px;
+                    background: radial-gradient(circle, #2b8fe0, transparent 70%);
+                    bottom: -240px;
+                    right: -140px;
+                }
+
+            .sigef-grid-overlay {
+                position: fixed;
+                inset: 0;
+                background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+                background-size: 46px 46px;
+                mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.7), transparent 75%);
+                z-index: 0;
+                pointer-events: none;
+            }
+
+            .sigef-page {
+                position: relative;
+                z-index: 1;
+                max-width: 960px;
+                margin: 0 auto;
+            }
+
+            .sigef-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 26px;
+                flex-wrap: wrap;
+                gap: 14px;
+            }
+
+            .sigef-back {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 12.5px;
+                font-weight: 700;
+                color: rgba(255,255,255,0.6);
+                text-decoration: none;
+                padding: 9px 14px;
+                border-radius: 10px;
+                border: 1px solid var(--sigef-border);
+                background: rgba(255,255,255,0.04);
+                transition: color .15s ease, background .15s ease;
+            }
+
+                .sigef-back:hover {
+                    color: #fff;
+                    background: rgba(255,255,255,0.08);
+                }
+
+                .sigef-back svg {
+                    width: 15px;
+                    height: 15px;
+                }
+
+            .sigef-header-title .eyebrow {
+                font-size: 11.5px;
+                font-weight: 800;
+                letter-spacing: 2px;
+                color: var(--sigef-accent);
+                text-transform: uppercase;
+                margin-bottom: 6px;
+            }
+
+            .sigef-header-title h1 {
+                font-size: 24px;
+                font-weight: 900;
+                margin: 0;
+                letter-spacing: -0.3px;
+            }
+
+            .sigef-alert {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                font-size: 13.5px;
+                font-weight: 600;
+                padding: 12px 16px;
+                border-radius: 12px;
+                margin-bottom: 20px;
+            }
+
+                .sigef-alert.error {
+                    background: rgba(255,107,107,0.12);
+                    border: 1px solid rgba(255,107,107,0.35);
+                    color: #ffb3b3;
+                }
+
+                .sigef-alert.success {
+                    background: rgba(61,220,151,0.12);
+                    border: 1px solid rgba(61,220,151,0.35);
+                    color: #a4f2d1;
+                }
+
+                .sigef-alert svg {
+                    width: 18px;
+                    height: 18px;
+                    flex-shrink: 0;
+                }
+
+            .sigef-card {
+                background: rgba(13, 32, 54, 0.55);
+                backdrop-filter: blur(22px);
+                -webkit-backdrop-filter: blur(22px);
+                border: 1px solid var(--sigef-border);
+                border-radius: 22px;
+                padding: 30px 30px 8px;
+                box-shadow: 0 30px 70px -25px rgba(0,0,0,0.5);
+                margin-bottom: 22px;
+            }
+
+            .sigef-section-title {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                font-size: 14px;
+                font-weight: 800;
+                color: #fff;
+                margin-bottom: 20px;
+                padding-bottom: 14px;
+                border-bottom: 1px solid var(--sigef-border);
+            }
+
+                .sigef-section-title .num {
+                    width: 26px;
+                    height: 26px;
+                    border-radius: 8px;
+                    background: rgba(23,201,172,0.15);
+                    color: var(--sigef-accent);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 12px;
+                    font-weight: 900;
+                    flex-shrink: 0;
+                }
+
+            .sigef-form-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px 18px;
+                margin-bottom: 22px;
+            }
+
+                .sigef-form-grid.cols-3 {
+                    grid-template-columns: repeat(3, 1fr);
+                }
+
+            .sigef-field {
+                margin-bottom: 0;
+            }
+
+                .sigef-field.full {
+                    grid-column: 1 / -1;
+                }
+
+                .sigef-field label {
+                    display: block;
+                    font-size: 12.5px;
+                    font-weight: 700;
+                    color: rgba(255,255,255,0.8);
+                    margin-bottom: 7px;
+                }
+
+                    .sigef-field label .req {
+                        color: var(--sigef-accent);
+                        margin-left: 2px;
+                    }
+
+            .sigef-input-wrap {
+                position: relative;
+                display: flex;
+                align-items: center;
+            }
+
+                .sigef-input-wrap .icon {
+                    position: absolute;
+                    left: 14px;
+                    width: 17px;
+                    height: 17px;
+                    color: rgba(255,255,255,0.45);
+                    pointer-events: none;
+                }
+
+                .sigef-input-wrap input,
+                .sigef-input-wrap select,
+                .sigef-input-wrap textarea {
+                    width: 100%;
+                    padding: 11px 14px 11px 40px;
+                    border-radius: 12px;
+                    border: 1.5px solid rgba(255,255,255,0.14);
+                    font-size: 14px;
+                    font-family: inherit;
+                    color: #fff;
+                    background: rgba(255,255,255,0.06);
+                    outline: none;
+                    transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+                }
+
+                .sigef-input-wrap textarea {
+                    padding-left: 14px;
+                    resize: vertical;
+                    min-height: 70px;
+                }
+
+                .sigef-input-wrap select {
+                    appearance: none;
+                    -webkit-appearance: none;
+                    cursor: pointer;
+                }
+
+                .sigef-input-wrap.no-icon input,
+                .sigef-input-wrap.no-icon select {
+                    padding-left: 14px;
+                }
+
+                .sigef-input-wrap .chevron-select {
+                    position: absolute;
+                    right: 14px;
+                    width: 15px;
+                    height: 15px;
+                    color: rgba(255,255,255,0.4);
+                    pointer-events: none;
+                }
+
+                .sigef-input-wrap input::placeholder,
+                .sigef-input-wrap textarea::placeholder {
+                    color: rgba(255,255,255,0.35);
+                }
+
+                .sigef-input-wrap input:focus,
+                .sigef-input-wrap select:focus,
+                .sigef-input-wrap textarea:focus {
+                    border-color: var(--sigef-accent);
+                    background: rgba(255,255,255,0.09);
+                    box-shadow: 0 0 0 3px rgba(23, 201, 172, 0.18);
+                }
+
+                .sigef-input-wrap select option {
+                    background: #0c2338;
+                    color: #fff;
+                }
+
+            .field-hint {
+                font-size: 11px;
+                color: rgba(255,255,255,0.35);
+                margin-top: 6px;
+            }
+
+            span.field-validation-error, .text-danger {
+                display: block;
+                font-size: 11.5px;
+                color: var(--sigef-danger);
+                font-weight: 600;
+                margin-top: 6px;
+            }
+
+            .sigef-preview {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                background: rgba(23,201,172,0.08);
+                border: 1px dashed rgba(23,201,172,0.35);
+                border-radius: 14px;
+                padding: 14px 16px;
+                margin-bottom: 22px;
+            }
+
+                .sigef-preview .p-icon {
+                    width: 36px;
+                    height: 36px;
+                    border-radius: 50%;
+                    background: linear-gradient(135deg, var(--sigef-accent-2), var(--sigef-accent));
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: 800;
+                    font-size: 13px;
+                    color: #04121f;
+                    flex-shrink: 0;
+                }
+
+                .sigef-preview .p-text .p-label {
+                    font-size: 10.5px;
+                    font-weight: 800;
+                    letter-spacing: 1px;
+                    text-transform: uppercase;
+                    color: var(--sigef-accent);
+                    margin-bottom: 2px;
+                }
+
+                .sigef-preview .p-text .p-name {
+                    font-size: 14.5px;
+                    font-weight: 700;
+                    color: #fff;
+                }
+
+                .sigef-preview .p-extra {
+                    margin-left: auto;
+                    font-size: 12px;
+                    color: rgba(255,255,255,0.5);
+                    font-weight: 600;
+                    text-align: right;
+                }
+
+            .sigef-actions {
+                display: flex;
+                justify-content: flex-end;
+                gap: 12px;
+                padding: 4px 0 24px;
+            }
+
+            .sigef-btn {
+                padding: 12.5px 26px;
+                border: none;
+                border-radius: 12px;
+                font-size: 14px;
+                font-weight: 800;
+                font-family: inherit;
+                cursor: pointer;
+                transition: transform .12s ease, filter .12s ease;
+            }
+
+                .sigef-btn.primary {
+                    background: linear-gradient(135deg, var(--sigef-accent-2), var(--sigef-accent));
+                    color: #04121f;
+                    box-shadow: 0 10px 26px -6px rgba(23, 201, 172, 0.5);
+                }
+
+                    .sigef-btn.primary:hover {
+                        filter: brightness(1.08);
+                        transform: translateY(-1px);
+                    }
+
+                .sigef-btn.ghost {
+                    background: rgba(255,255,255,0.06);
+                    color: rgba(255,255,255,0.75);
+                    border: 1px solid var(--sigef-border);
+                    text-decoration: none;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                    .sigef-btn.ghost:hover {
+                        background: rgba(255,255,255,0.1);
+                        color: #fff;
+                    }
+
+            @@media (max-width: 720px) {
+                .sigef-form-grid, .sigef-form-grid.cols-3 {
+                    grid-template-columns: 1fr;
+                }
+
+                .sigef-card {
+                    padding: 24px 18px 6px;
+                }
+
+                .sigef-actions {
+                    flex-direction: column-reverse;
+                }
+
+                .sigef-btn {
+                    width: 100%;
+                }
+            }
+    </style>
+</head>
+<body>
+
+    <div class="sigef-glow g1"></div>
+    <div class="sigef-glow g2"></div>
+    <div class="sigef-grid-overlay"></div>
+
+    <div class="sigef-page">
+
+        <div class="sigef-header">
+            <a href="/Menu" class="sigef-back">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6" /></svg>
+                Volver al menú
+            </a>
+            <div class="sigef-header-title">
+                <div class="eyebrow">Beneficiarios</div>
+                <h1>Crear beneficiario</h1>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.MensajeError))
+        {
+            <div class="sigef-alert error">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+                <span>@Model.MensajeError</span>
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(Model.MensajeExito))
+        {
+            <div class="sigef-alert success">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+                <span>@Model.MensajeExito</span>
+            </div>
+        }
+
+        <form method="post" id="crearForm" autocomplete="off">
+
+            <!-- ============ Identificación ============ -->
+            <div class="sigef-card">
+                <div class="sigef-section-title"><span class="num">1</span> Datos de identificación</div>
+
+                <div class="sigef-form-grid cols-3">
+                    <div class="sigef-field">
+                        <label asp-for="Input.TipoDocumento">Tipo de documento<span class="req">*</span></label>
+                        <div class="sigef-input-wrap no-icon">
+                            <select asp-for="Input.TipoDocumento">
+                                <option value="">Selecciona...</option>
+                                <option value="CC">Cédula de ciudadanía (CC)</option>
+                                <option value="TI">Tarjeta de identidad (TI)</option>
+                                <option value="CE">Cédula de extranjería (CE)</option>
+                                <option value="RC">Registro civil (RC)</option>
+                                <option value="PA">Pasaporte (PA)</option>
+                                <option value="PPT">Permiso de protección temporal (PPT)</option>
+                            </select>
+                            <svg class="chevron-select" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9" /></svg>
+                        </div>
+                        <span asp-validation-for="Input.TipoDocumento" class="text-danger"></span>
+                    </div>
+
+                    <div class="sigef-field" style="grid-column: span 2;">
+                        <label asp-for="Input.Documento">Número de documento<span class="req">*</span></label>
+                        <div class="sigef-input-wrap">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+                            <input asp-for="Input.Documento" id="Documento" placeholder="Ej: 1032456789" inputmode="numeric" />
+                        </div>
+                        <span asp-validation-for="Input.Documento" class="text-danger"></span>
+                    </div>
+
+                    <div class="sigef-field">
+                        <label asp-for="Input.PrimerNombre">Primer nombre<span class="req">*</span></label>
+                        <div class="sigef-input-wrap no-icon">
+                            <input asp-for="Input.PrimerNombre" class="nombre-input" placeholder="Primer nombre" />
+                        </div>
+                        <span asp-validation-for="Input.PrimerNombre" class="text-danger"></span>
+                    </div>
+
+                    <div class="sigef-field">
+                        <label asp-for="Input.SegundoNombre">Segundo nombre</label>
+                        <div class="sigef-input-wrap no-icon">
+                            <input asp-for="Input.SegundoNombre" class="nombre-input" placeholder="Segundo nombre" />
+                        </div>
+                    </div>
+
+                    <div class="sigef-field">
+                        <label asp-for="Input.PrimerApellido">Primer apellido<span class="req">*</span></label>
+                        <div class="sigef-input-wrap no-icon">
+                            <input asp-for="Input.PrimerApellido" class="nombre-input" placeholder="Primer apellido" />
+                        </div>
+                        <span asp-validation-for="Input.PrimerApellido" class="text-danger"></span>
+                    </div>
+
+                    <div class="sigef-field">
+                        <label asp-for="Input.SegundoApellido">Segundo apellido</label>
+                        <div class="sigef-input-wrap no-icon">
+                            <input asp-for="Input.SegundoApellido" class="nombre-input" placeholder="Segundo apellido" />
+                        </div>
+                    </div>
+
+                    <div class="sigef-field">
+                        <label asp-for="Input.FechaNacimiento">Fecha de nacimiento</label>
+                        <div class="sigef-input-wrap no-icon">
+                            <input asp-for="Input.FechaNacimiento" type="date" id="FechaNacimiento" />
+                        </div>
+                    </div>
+
+                    <div class="sigef-field">
+                        <label asp-for="Input.Sexo">Sexo</label>
+                        <div class="sigef-input-wrap no-icon">
+                            <select asp-for="Input.Sexo">
+                                <option value="">Selecciona...</option>
+                                <option value="Masculino">Masculino</option>
+                                <option value="Femenino">Femenino</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                            <svg class="chevron-select" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9" /></svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sigef-preview">
+                    <div class="p-icon" id="previewInitial">?</div>
+                    <div class="p-text">
+                        <div class="p-label">Nombre completo</div>
+                        <div class="p-name" id="previewNombre">Se genera automáticamente</div>
+                    </div>
+                    <div class="p-extra" id="previewEdad"></div>
+                </div>
+            </div>
+
+            <!-- ============ Contacto ============ -->
+            <div class="sigef-card">
+                <div class="sigef-section-title"><span class="num">2</span> Datos de contacto</div>
+
+                <div class="sigef-form-grid">
+                    <div class="sigef-field">
+                        <label asp-for="Input.Telefono1">Teléfono principal</label>
+                        <div class="sigef-input-wrap">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92Z" /></svg>
+                            <input asp-for="Input.Telefono1" placeholder="Ej: 3001234567" inputmode="tel" />
+                        </div>
+                    </div>
+
+                    <div class="sigef-field">
+                        <label asp-for="Input.Telefono2">Teléfono secundario</label>
+                        <div class="sigef-input-wrap">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92Z" /></svg>
+                            <input asp-for="Input.Telefono2" placeholder="Opcional" inputmode="tel" />
+                        </div>
+                    </div>
+
+                    <div class="sigef-field full">
+                        <label asp-for="Input.Correo">Correo electrónico</label>
+                        <div class="sigef-input-wrap">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" /></svg>
+                            <input asp-for="Input.Correo" type="email" placeholder="correo@ejemplo.com" />
+                        </div>
+                        <span asp-validation-for="Input.Correo" class="text-danger"></span>
+                    </div>
+
+                    <div class="sigef-field full">
+                        <label asp-for="Input.Direccion">Dirección</label>
+                        <div class="sigef-input-wrap no-icon">
+                            <textarea asp-for="Input.Direccion" placeholder="Ej: Calle 45 # 12-30, apto 301"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="sigef-field">
+                        <label asp-for="Input.Barrio">Barrio</label>
+                        <div class="sigef-input-wrap no-icon">
+                            <input asp-for="Input.Barrio" placeholder="Barrio" />
+                        </div>
+                    </div>
+
+                    <div class="sigef-field">
+                        <label asp-for="Input.Municipio">Municipio</label>
+                        <div class="sigef-input-wrap no-icon">
+                            <input asp-for="Input.Municipio" placeholder="Municipio" />
+                        </div>
+                    </div>
+
+                    <div class="sigef-field full">
+                        <label asp-for="Input.Departamento">Departamento</label>
+                        <div class="sigef-input-wrap no-icon">
+                            <input asp-for="Input.Departamento" placeholder="Departamento" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============ Afiliación ============ -->
+            <div class="sigef-card">
+                <div class="sigef-section-title"><span class="num">3</span> Afiliación en salud</div>
+
+                <div class="sigef-form-grid">
+                    <div class="sigef-field">
+                        <label asp-for="Input.EPS">EPS</label>
+                        <div class="sigef-input-wrap no-icon">
+                            <input asp-for="Input.EPS" placeholder="Ej: Nueva EPS" />
+                        </div>
+                    </div>
+
+                    <div class="sigef-field">
+                        <label asp-for="Input.Regimen">Régimen</label>
+                        <div class="sigef-input-wrap no-icon">
+                            <select asp-for="Input.Regimen">
+                                <option value="">Selecciona...</option>
+                                <option value="Contributivo">Contributivo</option>
+                                <option value="Subsidiado">Subsidiado</option>
+                                <option value="Especial">Especial</option>
+                                <option value="Excepción">Excepción</option>
+                                <option value="No afiliado">No afiliado</option>
+                            </select>
+                            <svg class="chevron-select" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9" /></svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sigef-actions">
+                <a href="/Menu" class="sigef-btn ghost">Cancelar</a>
+                <button type="submit" class="sigef-btn primary">Guardar beneficiario</button>
+            </div>
+
+        </form>
+
+    </div>
+
+    <script>
+            // Preview en vivo de nombre completo, iniciales y edad
+            const nombreInputs = document.querySelectorAll('.nombre-input');
+            const fechaInput = document.getElementById('FechaNacimiento');
+            const previewNombre = document.getElementById('previewNombre');
+            const previewInitial = document.getElementById('previewInitial');
+            const previewEdad = document.getElementById('previewEdad');
+
+            function actualizarPreview() {
+                const partes = Array.from(nombreInputs).map(i => i.value.trim()).filter(Boolean);
+                const nombreCompleto = partes.join(' ');
+                previewNombre.textContent = nombreCompleto || 'Se genera automáticamente';
+                previewInitial.textContent = partes.length ? partes[0].charAt(0).toUpperCase() : '?';
+
+                if (fechaInput.value) {
+                    const hoy = new Date();
+                    const nacimiento = new Date(fechaInput.value);
+                    let edad = hoy.getFullYear() - nacimiento.getFullYear();
+                    const m = hoy.getMonth() - nacimiento.getMonth();
+                    if (m < 0 || (m === 0 && hoy.getDate() < nacimiento.getDate())) edad--;
+                    previewEdad.textContent = edad >= 0 ? edad + ' años' : '';
+                } else {
+                    previewEdad.textContent = '';
+                }
+            }
+
+            nombreInputs.forEach(i => i.addEventListener('input', actualizarPreview));
+            fechaInput.addEventListener('change', actualizarPreview);
+            actualizarPreview();
+
+            // Solo números en documento
+            document.getElementById('Documento').addEventListener('input', function (e) {
+                e.target.value = e.target.value.replace(/\D/g, '');
+            });
+    </script>
+
+</body>
+</html>
+

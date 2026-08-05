@@ -1,0 +1,803 @@
+﻿@page
+@model SIGEF.Pages.MenuModel
+@{
+    ViewData["Title"] = "Menú - SIGEF";
+    Layout = null;
+    bool esAdmin = string.Equals(Model.RolUsuario, "Administrador", StringComparison.OrdinalIgnoreCase);
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="icon" type="image/png" href="~/Img/LogoSigef.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+            :root {
+                --sigef-deep: #061a30;
+                --sigef-primary: #0f4c81;
+                --sigef-accent: #17c9ac;
+                --sigef-accent-2: #2b8fe0;
+                --sigef-ink: #0c2338;
+                --sigef-muted: #7c93a8;
+                --sigef-border: rgba(255,255,255,0.14);
+                --sigef-danger: #ff6b6b;
+                --sigef-sidebar-w: 300px;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            html, body {
+                height: 100%;
+                margin: 0;
+                font-family: 'Manrope', 'Segoe UI', sans-serif;
+            }
+
+            body {
+                min-height: 100vh;
+                position: relative;
+                background: radial-gradient(ellipse at top, #0d3358 0%, #061a30 55%, #030d19 100%);
+                color: #fff;
+            }
+
+            .sigef-glow {
+                position: fixed;
+                border-radius: 50%;
+                filter: blur(100px);
+                opacity: 0.35;
+                z-index: 0;
+                pointer-events: none;
+            }
+
+                .sigef-glow.g1 {
+                    width: 560px;
+                    height: 560px;
+                    background: radial-gradient(circle, #17c9ac, transparent 70%);
+                    top: -220px;
+                    left: -160px;
+                }
+
+                .sigef-glow.g2 {
+                    width: 520px;
+                    height: 520px;
+                    background: radial-gradient(circle, #2b8fe0, transparent 70%);
+                    bottom: -240px;
+                    right: -140px;
+                }
+
+            .sigef-grid-overlay {
+                position: fixed;
+                inset: 0;
+                background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+                background-size: 46px 46px;
+                mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.7), transparent 75%);
+                z-index: 0;
+                pointer-events: none;
+            }
+
+            .sigef-app {
+                position: relative;
+                z-index: 1;
+                display: flex;
+                min-height: 100vh;
+            }
+
+            .sigef-sidebar {
+                width: var(--sigef-sidebar-w);
+                flex-shrink: 0;
+                background: rgba(13, 32, 54, 0.55);
+                backdrop-filter: blur(22px);
+                -webkit-backdrop-filter: blur(22px);
+                border-right: 1px solid var(--sigef-border);
+                display: flex;
+                flex-direction: column;
+                height: 100vh;
+                position: sticky;
+                top: 0;
+                transition: transform .2s ease;
+            }
+
+            .sigef-brand {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 22px 22px 18px;
+                border-bottom: 1px solid var(--sigef-border);
+            }
+
+                .sigef-brand img {
+                    width: 42px;
+                    height: 42px;
+                    border-radius: 12px;
+                    background: linear-gradient(160deg, #ffffff, #dfeaf3);
+                    padding: 4px;
+                    object-fit: contain;
+                }
+
+                .sigef-brand .brand-text .name {
+                    font-size: 15px;
+                    font-weight: 800;
+                    letter-spacing: 0.5px;
+                }
+
+                .sigef-brand .brand-text .sub {
+                    font-size: 11px;
+                    font-weight: 600;
+                    color: var(--sigef-muted);
+                    letter-spacing: 0.5px;
+                }
+
+            .sigef-nav {
+                flex: 1;
+                overflow-y: auto;
+                padding: 14px 14px 20px;
+            }
+
+                .sigef-nav::-webkit-scrollbar {
+                    width: 6px;
+                }
+
+                .sigef-nav::-webkit-scrollbar-thumb {
+                    background: rgba(255,255,255,0.12);
+                    border-radius: 10px;
+                }
+
+            .nav-group {
+                margin-bottom: 6px;
+            }
+
+            .nav-group-btn {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 12px 12px;
+                background: transparent;
+                border: none;
+                border-radius: 12px;
+                color: rgba(255,255,255,0.85);
+                font-family: inherit;
+                font-size: 13.5px;
+                font-weight: 700;
+                cursor: pointer;
+                transition: background .15s ease, color .15s ease;
+            }
+
+                .nav-group-btn:hover {
+                    background: rgba(255,255,255,0.06);
+                }
+
+                .nav-group-btn .icon {
+                    width: 19px;
+                    height: 19px;
+                    color: var(--sigef-accent);
+                    flex-shrink: 0;
+                }
+
+                .nav-group-btn .label {
+                    flex: 1;
+                    text-align: left;
+                }
+
+                .nav-group-btn .chevron {
+                    width: 16px;
+                    height: 16px;
+                    color: rgba(255,255,255,0.4);
+                    transition: transform .2s ease;
+                    flex-shrink: 0;
+                }
+
+            .nav-group.open .nav-group-btn .chevron {
+                transform: rotate(180deg);
+            }
+
+            .nav-group.open .nav-group-btn {
+                background: rgba(23,201,172,0.08);
+                color: #fff;
+            }
+
+            .nav-submenu {
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height .25s ease;
+                padding-left: 14px;
+            }
+
+            .nav-group.open .nav-submenu {
+                max-height: 400px;
+            }
+
+            .nav-submenu a {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 9px 12px 9px 20px;
+                margin: 2px 0;
+                font-size: 13px;
+                font-weight: 600;
+                color: rgba(255,255,255,0.62);
+                text-decoration: none;
+                border-radius: 10px;
+                border-left: 2px solid transparent;
+                transition: background .15s ease, color .15s ease, border-color .15s ease;
+            }
+
+                .nav-submenu a:hover {
+                    background: rgba(255,255,255,0.05);
+                    color: #fff;
+                    border-left-color: var(--sigef-accent);
+                }
+
+                .nav-submenu a .dot {
+                    width: 5px;
+                    height: 5px;
+                    border-radius: 50%;
+                    background: var(--sigef-muted);
+                    flex-shrink: 0;
+                }
+
+                .nav-submenu a:hover .dot {
+                    background: var(--sigef-accent);
+                }
+
+            .nav-single {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 12px 12px;
+                border-radius: 12px;
+                color: rgba(255,255,255,0.85);
+                font-size: 13.5px;
+                font-weight: 700;
+                text-decoration: none;
+                transition: background .15s ease, color .15s ease;
+            }
+
+                .nav-single:hover {
+                    background: rgba(255,255,255,0.06);
+                    color: #fff;
+                }
+
+                .nav-single .icon {
+                    width: 19px;
+                    height: 19px;
+                    color: var(--sigef-accent);
+                    flex-shrink: 0;
+                }
+
+            .sigef-sidebar-footer {
+                padding: 16px 22px;
+                border-top: 1px solid var(--sigef-border);
+                font-size: 10.5px;
+                color: rgba(255,255,255,0.3);
+                font-weight: 600;
+                letter-spacing: 0.2px;
+            }
+
+                .sigef-sidebar-footer strong {
+                    color: rgba(255,255,255,0.6);
+                }
+
+            .sigef-main {
+                flex: 1;
+                min-width: 0;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .sigef-topbar {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 18px 32px;
+                border-bottom: 1px solid var(--sigef-border);
+                background: rgba(6, 26, 48, 0.35);
+                backdrop-filter: blur(14px);
+                position: sticky;
+                top: 0;
+                z-index: 5;
+            }
+
+                .sigef-topbar .greeting {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    font-size: 12.5px;
+                    font-weight: 700;
+                    color: rgba(255,255,255,0.5);
+                }
+
+                    .sigef-topbar .greeting .dot {
+                        width: 6px;
+                        height: 6px;
+                        border-radius: 50%;
+                        background: var(--sigef-accent);
+                        box-shadow: 0 0 10px var(--sigef-accent);
+                    }
+
+            .sigef-hamburger {
+                display: none;
+                background: rgba(255,255,255,0.06);
+                border: 1px solid var(--sigef-border);
+                border-radius: 10px;
+                width: 38px;
+                height: 38px;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                color: #fff;
+            }
+
+            .sigef-user-box {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .sigef-user-info {
+                text-align: right;
+            }
+
+                .sigef-user-info .u-name {
+                    font-size: 13.5px;
+                    font-weight: 800;
+                    color: #fff;
+                }
+
+                .sigef-user-info .u-rol {
+                    font-size: 11px;
+                    font-weight: 600;
+                    color: var(--sigef-accent);
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                }
+
+            .sigef-avatar {
+                width: 38px;
+                height: 38px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, var(--sigef-accent-2), var(--sigef-accent));
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 800;
+                font-size: 14px;
+                color: #04121f;
+            }
+
+            .sigef-logout-form {
+                margin: 0;
+            }
+
+            .sigef-logout-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 38px;
+                height: 38px;
+                border-radius: 10px;
+                border: 1px solid rgba(255,107,107,0.3);
+                background: rgba(255,107,107,0.1);
+                color: #ffb3b3;
+                cursor: pointer;
+                transition: background .15s ease;
+            }
+
+                .sigef-logout-btn:hover {
+                    background: rgba(255,107,107,0.2);
+                }
+
+                .sigef-logout-btn svg {
+                    width: 17px;
+                    height: 17px;
+                }
+
+            .sigef-content {
+                flex: 1;
+                padding: 32px;
+            }
+
+            .sigef-welcome {
+                margin-bottom: 28px;
+            }
+
+                .sigef-welcome .eyebrow {
+                    font-size: 11.5px;
+                    font-weight: 800;
+                    letter-spacing: 2px;
+                    color: var(--sigef-accent);
+                    text-transform: uppercase;
+                    margin-bottom: 8px;
+                }
+
+                .sigef-welcome h1 {
+                    font-size: 28px;
+                    font-weight: 900;
+                    margin: 0 0 6px;
+                    letter-spacing: -0.3px;
+                }
+
+                .sigef-welcome p {
+                    font-size: 14px;
+                    color: rgba(255,255,255,0.5);
+                    margin: 0;
+                }
+
+            .sigef-cards-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+                gap: 18px;
+            }
+
+            .sigef-quick-card {
+                background: rgba(13, 32, 54, 0.55);
+                border: 1px solid var(--sigef-border);
+                border-radius: 18px;
+                padding: 22px;
+                position: relative;
+                overflow: hidden;
+                text-decoration: none;
+                color: #fff;
+                display: block;
+                transition: transform .15s ease, border-color .15s ease;
+            }
+
+                .sigef-quick-card:hover {
+                    transform: translateY(-3px);
+                    border-color: rgba(23,201,172,0.4);
+                }
+
+                .sigef-quick-card .qc-icon {
+                    width: 42px;
+                    height: 42px;
+                    border-radius: 12px;
+                    background: rgba(23,201,172,0.12);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-bottom: 14px;
+                    color: var(--sigef-accent);
+                }
+
+                    .sigef-quick-card .qc-icon svg {
+                        width: 22px;
+                        height: 22px;
+                    }
+
+                .sigef-quick-card .qc-title {
+                    font-size: 14.5px;
+                    font-weight: 800;
+                    margin-bottom: 4px;
+                }
+
+                .sigef-quick-card .qc-sub {
+                    font-size: 12px;
+                    color: rgba(255,255,255,0.45);
+                    font-weight: 500;
+                }
+
+            @@media (max-width: 980px) {
+                .sigef-sidebar {
+                    position: fixed;
+                    z-index: 20;
+                    left: 0;
+                    top: 0;
+                    transform: translateX(-100%);
+                    box-shadow: 20px 0 60px rgba(0,0,0,0.4);
+                }
+
+                    .sigef-sidebar.open {
+                        transform: translateX(0);
+                    }
+
+                .sigef-hamburger {
+                    display: flex;
+                }
+
+                .sigef-content {
+                    padding: 22px 18px;
+                }
+
+                .sigef-topbar {
+                    padding: 16px 18px;
+                }
+            }
+
+            .sigef-overlay {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,0.5);
+                z-index: 15;
+            }
+
+                .sigef-overlay.open {
+                    display: block;
+                }
+    </style>
+</head>
+<body>
+
+    <div class="sigef-glow g1"></div>
+    <div class="sigef-glow g2"></div>
+    <div class="sigef-grid-overlay"></div>
+
+    <div class="sigef-overlay" id="sidebarOverlay"></div>
+
+    <div class="sigef-app">
+
+        <!-- ============ SIDEBAR ============ -->
+        <aside class="sigef-sidebar" id="sigefSidebar">
+
+            <div class="sigef-brand">
+                <img src="~/Img/LogoSigef.png" alt="Logo SIGEF" />
+                <div class="brand-text">
+                    <div class="name">SIGEF</div>
+                    <div class="sub">Gestión Farmacéutica</div>
+                </div>
+            </div>
+
+            <nav class="sigef-nav">
+
+                <!-- Beneficiarios -->
+                <div class="nav-group">
+                    <button type="button" class="nav-group-btn" data-group>
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                        </svg>
+                        <span class="label">Beneficiarios</span>
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9" /></svg>
+                    </button>
+                    <div class="nav-submenu">
+                        <a href="/Beneficiarios/Consultar"><span class="dot"></span> Consultar beneficiarios</a>
+                        @if (esAdmin)
+                        {
+                            <a href="/Beneficiarios/Crear"><span class="dot"></span> Crear beneficiarios</a>
+                            <a href="/Beneficiarios/Subir"><span class="dot"></span> Subir beneficiarios</a>
+                        }
+                    </div>
+                </div>
+
+                <!-- Inventarios -->
+                <div class="nav-group">
+                    <button type="button" class="nav-group-btn" data-group>
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                            <line x1="12" y1="22.08" x2="12" y2="12" />
+                        </svg>
+                        <span class="label">Inventarios</span>
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9" /></svg>
+                    </button>
+                    <div class="nav-submenu">
+                        <a href="/Inventario/Movimientos"><span class="dot"></span> Movimientos</a>
+                        <a href="/Inventario/Articulos"><span class="dot"></span> Artículos</a>
+                        <a href="/Inventario/Kardex"><span class="dot"></span> Kardex</a>
+                        <a href="/Inventario/Traslados"><span class="dot"></span> Traslados</a>
+                        <a href="/Inventario/ReporteInventario"><span class="dot"></span> Reporte de inventario</a>
+                    </div>
+                </div>
+
+                <!-- Informe de dispensación -->
+                <div class="nav-group">
+                    <button type="button" class="nav-group-btn" data-group>
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <line x1="16" y1="13" x2="8" y2="13" />
+                            <line x1="16" y1="17" x2="8" y2="17" />
+                        </svg>
+                        <span class="label">Informe de dispensación</span>
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9" /></svg>
+                    </button>
+                    <div class="nav-submenu">
+                        <a href="/Dispensacion/Pendientes"><span class="dot"></span> Pendientes</a>
+                        <a href="/Dispensacion/DescargarPendientes"><span class="dot"></span> Descargar pendientes</a>
+                        <a href="/Dispensacion/FormulasAnuladas"><span class="dot"></span> Fórmulas anuladas</a>
+                    </div>
+                </div>
+
+                <!-- Informes y consultas -->
+                <div class="nav-group">
+                    <button type="button" class="nav-group-btn" data-group>
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="20" x2="18" y2="10" />
+                            <line x1="12" y1="20" x2="12" y2="4" />
+                            <line x1="6" y1="20" x2="6" y2="14" />
+                        </svg>
+                        <span class="label">Informes y consultas</span>
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9" /></svg>
+                    </button>
+                    <div class="nav-submenu">
+                        <a href="/Informes/ConteoFormulas"><span class="dot"></span> Conteo de fórmulas</a>
+                    </div>
+                </div>
+
+                <!-- Gestión de pendientes -->
+                <div class="nav-group">
+                    <button type="button" class="nav-group-btn" data-group>
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10" />
+                            <polyline points="12 6 12 12 16 14" />
+                        </svg>
+                        <span class="label">Gestión de pendientes</span>
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9" /></svg>
+                    </button>
+                    <div class="nav-submenu">
+                        <a href="/Pendientes/Central"><span class="dot"></span> Central de pendientes</a>
+                        <a href="/Pendientes/InformeDespachados"><span class="dot"></span> Informe de pendientes despachados</a>
+                        <a href="/Pendientes/AnularFormula"><span class="dot"></span> Anular fórmula</a>
+                    </div>
+                </div>
+
+                @if (esAdmin)
+                {
+                    <!-- Compras (solo administrador) -->
+                    <div class="nav-group">
+                        <button type="button" class="nav-group-btn" data-group>
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="9" cy="21" r="1" />
+                                <circle cx="20" cy="21" r="1" />
+                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                            </svg>
+                            <span class="label">Compras</span>
+                            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9" /></svg>
+                        </button>
+                        <div class="nav-submenu">
+                            <a href="/Compras/CompraProveedores"><span class="dot"></span> Compra a proveedores</a>
+                            <a href="/Compras/CrearProveedores"><span class="dot"></span> Crear proveedores</a>
+                        </div>
+                    </div>
+                }
+
+            </nav>
+
+            <div class="sigef-sidebar-footer">
+                Desarrollado por <strong>Jhan Estrada</strong>
+            </div>
+
+        </aside>
+
+        <!-- ============ CONTENIDO PRINCIPAL ============ -->
+        <main class="sigef-main">
+
+            <div class="sigef-topbar">
+                <div style="display:flex; align-items:center; gap:14px;">
+                    <button type="button" class="sigef-hamburger" id="hamburgerBtn" aria-label="Abrir menú">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                            <line x1="3" y1="12" x2="21" y2="12" />
+                            <line x1="3" y1="6" x2="21" y2="6" />
+                            <line x1="3" y1="18" x2="21" y2="18" />
+                        </svg>
+                    </button>
+                    <div class="greeting">
+                        <span class="dot"></span>
+                        SIGEF · Panel principal
+                    </div>
+                </div>
+
+                <div class="sigef-user-box">
+                    <div class="sigef-user-info">
+                        <div class="u-name">@Model.NombreUsuario</div>
+                        <div class="u-rol">@Model.RolUsuario</div>
+                    </div>
+                    <div class="sigef-avatar">
+                        @(string.IsNullOrEmpty(Model.NombreUsuario) ? "U" : Model.NombreUsuario.Substring(0, 1).ToUpper())
+                    </div>
+                    <form method="post" asp-page-handler="Logout" class="sigef-logout-form">
+                        <button type="submit" class="sigef-logout-btn" title="Cerrar sesión">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                                <polyline points="16 17 21 12 16 7" />
+                                <line x1="21" y1="12" x2="9" y2="12" />
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="sigef-content">
+
+                <div class="sigef-welcome">
+                    <div class="eyebrow">Bienvenido</div>
+                    <h1>Hola, @Model.NombreUsuario</h1>
+                    <p>Selecciona un módulo desde el menú lateral para comenzar a trabajar.</p>
+                </div>
+
+                <div class="sigef-cards-grid">
+
+                    <a href="/Beneficiarios/Consultar" class="sigef-quick-card">
+                        <div class="qc-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="4" /><path d="M5.5 21a6.5 6.5 0 0 1 13 0" /></svg>
+                        </div>
+                        <div class="qc-title">Beneficiarios</div>
+                        <div class="qc-sub">Consultar, crear y subir</div>
+                    </a>
+
+                    <a href="/Inventario/Articulos" class="sigef-quick-card">
+                        <div class="qc-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" /></svg>
+                        </div>
+                        <div class="qc-title">Inventarios</div>
+                        <div class="qc-sub">Movimientos, artículos, traslados y kardex</div>
+                    </a>
+
+                    <a href="/Dispensacion/Pendientes" class="sigef-quick-card">
+                        <div class="qc-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" /><polyline points="14 2 14 8 20 8" /></svg>
+                        </div>
+                        <div class="qc-title">Dispensación</div>
+                        <div class="qc-sub">Pendientes y fórmulas anuladas</div>
+                    </a>
+
+                    <a href="/Pendientes/Central" class="sigef-quick-card">
+                        <div class="qc-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
+                        </div>
+                        <div class="qc-title">Gestión de pendientes</div>
+                        <div class="qc-sub">Central, despachados y anulación</div>
+                    </a>
+
+                    @if (esAdmin)
+                    {
+                        <a href="/Compras/CompraProveedores" class="sigef-quick-card">
+                            <div class="qc-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1" /><circle cx="20" cy="21" r="1" /><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" /></svg>
+                            </div>
+                            <div class="qc-title">Compras</div>
+                            <div class="qc-sub">Compra y creación de proveedores</div>
+                        </a>
+                    }
+
+                    <a href="/Informes/ConteoFormulas" class="sigef-quick-card">
+                        <div class="qc-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10" /><line x1="12" y1="20" x2="12" y2="4" /><line x1="6" y1="20" x2="6" y2="14" /></svg>
+                        </div>
+                        <div class="qc-title">Informes y consultas</div>
+                        <div class="qc-sub">Conteo de fórmulas</div>
+                    </a>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+    <script>
+            // Acordeones del sidebar
+            document.querySelectorAll('[data-group]').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    var group = btn.closest('.nav-group');
+                    var wasOpen = group.classList.contains('open');
+                    document.querySelectorAll('.nav-group.open').forEach(function (g) {
+                        g.classList.remove('open');
+                    });
+                    if (!wasOpen) group.classList.add('open');
+                });
+            });
+
+            // Menú móvil
+            var sidebar = document.getElementById('sigefSidebar');
+            var overlay = document.getElementById('sidebarOverlay');
+            var hamburger = document.getElementById('hamburgerBtn');
+
+            function toggleSidebar() {
+                sidebar.classList.toggle('open');
+                overlay.classList.toggle('open');
+            }
+
+            hamburger.addEventListener('click', toggleSidebar);
+            overlay.addEventListener('click', toggleSidebar);
+    </script>
+
+</body>
+</html>

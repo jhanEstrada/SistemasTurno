@@ -1,0 +1,645 @@
+﻿@page
+@model SIGEF.Pages.CrearUsuarioModel
+@{
+    ViewData["Title"] = "Crear usuario - SIGEF";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="icon" type="image/png" href="~/Img/LogoSigef.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+            :root {
+                --sigef-deep: #061a30;
+                --sigef-primary: #0f4c81;
+                --sigef-accent: #17c9ac;
+                --sigef-accent-2: #2b8fe0;
+                --sigef-ink: #0c2338;
+                --sigef-muted: #7c93a8;
+                --sigef-border: rgba(255,255,255,0.14);
+                --sigef-danger: #ff6b6b;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            html, body {
+                height: 100%;
+                margin: 0;
+                font-family: 'Manrope', 'Segoe UI', sans-serif;
+            }
+
+            body {
+                min-height: 100vh;
+                position: relative;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 48px 24px;
+                background: radial-gradient(ellipse at top, #0d3358 0%, #061a30 55%, #030d19 100%);
+                overflow-x: hidden;
+            }
+
+            .sigef-glow {
+                position: absolute;
+                border-radius: 50%;
+                filter: blur(90px);
+                opacity: 0.5;
+                z-index: 0;
+                animation: sigef-drift 16s ease-in-out infinite;
+            }
+
+                .sigef-glow.g1 {
+                    width: 620px;
+                    height: 620px;
+                    background: radial-gradient(circle, #17c9ac, transparent 70%);
+                    top: -220px;
+                    left: -160px;
+                }
+
+                .sigef-glow.g2 {
+                    width: 560px;
+                    height: 560px;
+                    background: radial-gradient(circle, #2b8fe0, transparent 70%);
+                    bottom: -260px;
+                    right: -140px;
+                    animation-delay: -6s;
+                }
+
+                .sigef-glow.g3 {
+                    width: 380px;
+                    height: 380px;
+                    background: radial-gradient(circle, #6d5bd0, transparent 70%);
+                    top: 45%;
+                    right: 6%;
+                    opacity: 0.3;
+                    animation-delay: -11s;
+                }
+
+            @@keyframes sigef-drift {
+                0%, 100% {
+                    transform: translate(0, 0) scale(1);
+                }
+
+                50% {
+                    transform: translate(40px, -30px) scale(1.08);
+                }
+            }
+
+            .sigef-grid-overlay {
+                position: absolute;
+                inset: 0;
+                background-image: linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+                background-size: 46px 46px;
+                mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.8), transparent 75%);
+                z-index: 0;
+            }
+
+            .sigef-top-bar {
+                position: fixed;
+                top: 26px;
+                left: 0;
+                right: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 9px;
+                font-size: 12.5px;
+                font-weight: 700;
+                color: rgba(255,255,255,0.65);
+                letter-spacing: 1px;
+                text-transform: uppercase;
+                z-index: 2;
+            }
+
+                .sigef-top-bar .dot {
+                    width: 6px;
+                    height: 6px;
+                    border-radius: 50%;
+                    background: var(--sigef-accent);
+                    box-shadow: 0 0 10px var(--sigef-accent);
+                }
+
+            .sigef-card {
+                width: 100%;
+                max-width: 560px;
+                background: rgba(13, 32, 54, 0.55);
+                backdrop-filter: blur(22px);
+                -webkit-backdrop-filter: blur(22px);
+                border: 1px solid rgba(255,255,255,0.14);
+                border-radius: 24px;
+                padding: 40px 40px 32px;
+                box-shadow: 0 30px 70px -20px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.03) inset;
+                position: relative;
+                z-index: 1;
+            }
+
+                .sigef-card::before {
+                    content: "";
+                    position: absolute;
+                    inset: 0;
+                    border-radius: 24px;
+                    padding: 1px;
+                    background: linear-gradient(140deg, rgba(23,201,172,0.5), rgba(255,255,255,0) 35%, rgba(43,143,224,0.4));
+                    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+                    -webkit-mask-composite: xor;
+                    mask-composite: exclude;
+                    pointer-events: none;
+                }
+
+            .sigef-logo-circle {
+                width: 78px;
+                height: 78px;
+                border-radius: 50%;
+                margin: 0 auto 16px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: linear-gradient(160deg, #ffffff, #dfeaf3);
+                box-shadow: 0 0 0 6px rgba(23, 201, 172, 0.12), 0 0 34px rgba(23, 201, 172, 0.35), 0 10px 24px -8px rgba(0,0,0,0.4);
+            }
+
+                .sigef-logo-circle img {
+                    width: 54px;
+                    height: 54px;
+                    object-fit: contain;
+                    border-radius: 50%;
+                }
+
+            .sigef-title-block {
+                text-align: center;
+                margin-bottom: 28px;
+            }
+
+                .sigef-title-block .system-name {
+                    font-size: 11.5px;
+                    font-weight: 800;
+                    letter-spacing: 2px;
+                    color: var(--sigef-accent);
+                    text-transform: uppercase;
+                    margin-bottom: 8px;
+                }
+
+                .sigef-title-block h2 {
+                    font-size: 22px;
+                    font-weight: 800;
+                    color: #fff;
+                    margin: 0 0 6px;
+                }
+
+                .sigef-title-block .sub {
+                    font-size: 13px;
+                    color: rgba(255,255,255,0.5);
+                    margin: 0;
+                }
+
+            .sigef-section-label {
+                font-size: 11px;
+                font-weight: 800;
+                letter-spacing: 1.4px;
+                text-transform: uppercase;
+                color: rgba(255,255,255,0.4);
+                margin: 26px 0 14px;
+            }
+
+                .sigef-section-label:first-of-type {
+                    margin-top: 0;
+                }
+
+            .sigef-grid-2 {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 14px;
+            }
+
+            .sigef-field {
+                margin-bottom: 16px;
+            }
+
+                .sigef-field label {
+                    display: block;
+                    font-size: 12.5px;
+                    font-weight: 700;
+                    color: rgba(255,255,255,0.8);
+                    margin-bottom: 7px;
+                }
+
+            .sigef-input-wrap {
+                position: relative;
+                display: flex;
+                align-items: center;
+            }
+
+                .sigef-input-wrap .icon {
+                    position: absolute;
+                    left: 14px;
+                    width: 18px;
+                    height: 18px;
+                    color: rgba(255,255,255,0.45);
+                    pointer-events: none;
+                }
+
+                .sigef-input-wrap input,
+                .sigef-input-wrap select {
+                    width: 100%;
+                    padding: 12px 14px 12px 42px;
+                    border-radius: 12px;
+                    border: 1.5px solid rgba(255,255,255,0.14);
+                    font-size: 14px;
+                    font-family: inherit;
+                    color: #fff;
+                    background: rgba(255,255,255,0.06);
+                    outline: none;
+                    transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+                    appearance: none;
+                    -webkit-appearance: none;
+                }
+
+                .sigef-input-wrap select {
+                    padding-right: 36px;
+                    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c93a8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+                    background-repeat: no-repeat;
+                    background-position: right 14px center;
+                    background-size: 16px;
+                }
+
+                    .sigef-input-wrap select option {
+                        background: #0d2036;
+                        color: #fff;
+                    }
+
+                .sigef-input-wrap input::placeholder {
+                    color: rgba(255,255,255,0.35);
+                }
+
+                .sigef-input-wrap input:focus,
+                .sigef-input-wrap select:focus {
+                    border-color: var(--sigef-accent);
+                    background-color: rgba(255,255,255,0.09);
+                    box-shadow: 0 0 0 3px rgba(23, 201, 172, 0.18);
+                }
+
+                .sigef-input-wrap input[type="password"] {
+                    padding-right: 42px;
+                }
+
+            .toggle-pwd {
+                position: absolute;
+                right: 12px;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 4px;
+                display: flex;
+                align-items: center;
+                color: rgba(255,255,255,0.45);
+                border-radius: 6px;
+            }
+
+                .toggle-pwd:hover {
+                    color: #fff;
+                }
+
+                .toggle-pwd svg {
+                    width: 19px;
+                    height: 19px;
+                }
+
+            .sigef-hint {
+                font-size: 11.5px;
+                color: rgba(255,255,255,0.4);
+                margin-top: -10px;
+                margin-bottom: 16px;
+            }
+
+            /* ---------- Selector de rol ---------- */
+            .sigef-role-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+                margin-bottom: 8px;
+            }
+
+            .sigef-role-card {
+                position: relative;
+                cursor: pointer;
+            }
+
+                .sigef-role-card input {
+                    position: absolute;
+                    opacity: 0;
+                    inset: 0;
+                    margin: 0;
+                    cursor: pointer;
+                }
+
+                .sigef-role-card .box {
+                    border: 1.5px solid rgba(255,255,255,0.14);
+                    background: rgba(255,255,255,0.05);
+                    border-radius: 14px;
+                    padding: 16px 16px 14px;
+                    transition: border-color .15s ease, background .15s ease, transform .12s ease;
+                    height: 100%;
+                }
+
+                    .sigef-role-card .box .role-icon {
+                        width: 34px;
+                        height: 34px;
+                        border-radius: 9px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        margin-bottom: 12px;
+                        background: rgba(255,255,255,0.08);
+                        color: var(--sigef-accent);
+                    }
+
+                        .sigef-role-card .box .role-icon svg {
+                            width: 18px;
+                            height: 18px;
+                        }
+
+                    .sigef-role-card .box .role-name {
+                        font-size: 14px;
+                        font-weight: 800;
+                        color: #fff;
+                        margin-bottom: 4px;
+                    }
+
+                    .sigef-role-card .box .role-desc {
+                        font-size: 11.5px;
+                        line-height: 1.5;
+                        color: rgba(255,255,255,0.5);
+                    }
+
+                .sigef-role-card input:checked ~ .box {
+                    border-color: var(--sigef-accent);
+                    background: rgba(23, 201, 172, 0.1);
+                    box-shadow: 0 0 0 3px rgba(23, 201, 172, 0.14);
+                }
+
+                    .sigef-role-card input:checked ~ .box .role-icon {
+                        background: var(--sigef-accent);
+                        color: #04121f;
+                    }
+
+                .sigef-role-card input:focus-visible ~ .box {
+                    outline: 2px solid var(--sigef-accent);
+                    outline-offset: 2px;
+                }
+
+            .sigef-btn {
+                width: 100%;
+                padding: 13.5px;
+                border: none;
+                border-radius: 12px;
+                background: linear-gradient(135deg, var(--sigef-accent-2), var(--sigef-accent));
+                color: #04121f;
+                font-size: 15px;
+                font-weight: 800;
+                font-family: inherit;
+                cursor: pointer;
+                margin-top: 8px;
+                transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
+                box-shadow: 0 10px 26px -6px rgba(23, 201, 172, 0.5);
+            }
+
+                .sigef-btn:hover {
+                    filter: brightness(1.08);
+                    transform: translateY(-1px);
+                }
+
+                .sigef-btn:active {
+                    transform: translateY(1px);
+                }
+
+            .sigef-create {
+                text-align: center;
+                font-size: 13px;
+                color: rgba(255,255,255,0.5);
+                margin-top: 18px;
+            }
+
+                .sigef-create a {
+                    color: #fff;
+                    font-weight: 800;
+                    text-decoration: none;
+                    border-bottom: 1px solid var(--sigef-accent);
+                }
+
+            .sigef-alert {
+                display: none;
+                align-items: center;
+                gap: 8px;
+                background: rgba(255,107,107,0.12);
+                border: 1px solid rgba(255,107,107,0.35);
+                color: #ffb3b3;
+                font-size: 13px;
+                font-weight: 600;
+                padding: 10px 12px;
+                border-radius: 10px;
+                margin-bottom: 16px;
+            }
+
+            .sigef-alert-success {
+                background: rgba(23, 201, 172, 0.12);
+                border: 1px solid rgba(23, 201, 172, 0.4);
+                color: #7fe9d4;
+            }
+
+            .sigef-footer {
+                text-align: center;
+                margin-top: 24px;
+                font-size: 11px;
+                color: rgba(255,255,255,0.35);
+                font-weight: 600;
+            }
+
+                .sigef-footer strong {
+                    color: rgba(255,255,255,0.65);
+                    font-weight: 800;
+                }
+
+            @@media (max-width: 560px) {
+                .sigef-grid-2, .sigef-role-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .sigef-card {
+                    padding: 32px 22px 26px;
+                }
+            }
+    </style>
+</head>
+<body>
+
+    <div class="sigef-glow g1"></div>
+    <div class="sigef-glow g2"></div>
+    <div class="sigef-glow g3"></div>
+    <div class="sigef-grid-overlay"></div>
+
+    <div class="sigef-top-bar">
+        <span class="dot"></span>
+        SIGEF · Sistema Integral de Gestión Farmacéutica
+    </div>
+
+    <div class="sigef-card">
+
+        <div class="sigef-logo-circle">
+            <img src="~/Img/LogoSigef.png" alt="Logo SIGEF" />
+        </div>
+
+        <div class="sigef-title-block">
+            <div class="system-name">Nuevo acceso</div>
+            <h2>Crear usuario</h2>
+            <p class="sub">Completa los datos para solicitar tu acceso a SIGEF</p>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+        {
+            <div class="sigef-alert" style="display:flex;">
+                <span>@Model.ErrorMessage</span>
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+        {
+            <div class="sigef-alert sigef-alert-success" style="display:flex;">
+                <span>@Model.SuccessMessage</span>
+            </div>
+        }
+
+        <form method="post" id="createForm" autocomplete="off">
+
+            <div class="sigef-section-label">Datos personales</div>
+
+            <div class="sigef-field">
+                <label for="NombreCompleto">Nombre completo</label>
+                <div class="sigef-input-wrap">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                    </svg>
+                    <input type="text" id="NombreCompleto" name="NombreCompleto" placeholder="Ej: María Fernanda Ríos Ortiz" required />
+                </div>
+            </div>
+
+            <div class="sigef-grid-2">
+                <div class="sigef-field">
+                    <label for="TipoDocumento">Tipo de documento</label>
+                    <div class="sigef-input-wrap">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="4" width="18" height="16" rx="2" />
+                            <path d="M7 8h10M7 12h6" />
+                        </svg>
+                        <select id="TipoDocumento" name="TipoDocumento" required>
+                            <option value="" disabled selected>Selecciona</option>
+                            <option value="CC">Cédula de ciudadanía</option>
+                            <option value="CE">Cédula de extranjería</option>
+                            <option value="TI">Tarjeta de identidad</option>
+                            <option value="PA">Pasaporte</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="sigef-field">
+                    <label for="NumeroDocumento">Número de documento</label>
+                    <div class="sigef-input-wrap">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="4" width="18" height="16" rx="2" />
+                            <path d="M7 8h10M7 12h6" />
+                        </svg>
+                        <input type="text" id="NumeroDocumento" name="NumeroDocumento" placeholder="Ej: 1023456789" inputmode="numeric" required />
+                    </div>
+                </div>
+            </div>
+
+            <div class="sigef-field">
+                <label for="Direccion">Dirección</label>
+                <div class="sigef-input-wrap">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+                        <circle cx="12" cy="10" r="3" />
+                    </svg>
+                    <input type="text" id="Direccion" name="Direccion" placeholder="Ej: Cra 10 # 25-40, Barrio Centro" required />
+                </div>
+            </div>
+
+            <div class="sigef-field">
+                <label for="Municipio">Municipio</label>
+                <div class="sigef-input-wrap">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1m4 0h1m-6 4h1m4 0h1m-6 4h1m4 0h1" />
+                    </svg>
+                    <input type="text" id="Municipio" name="Municipio" placeholder="Ej: Sincelejo" required />
+                </div>
+            </div>
+
+            <div class="sigef-section-label">Acceso al sistema</div>
+
+            <div class="sigef-field">
+                <label for="Correo">Correo electrónico</label>
+                <div class="sigef-input-wrap">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="5" width="18" height="14" rx="2" />
+                        <path d="m3 7 9 6 9-6" />
+                    </svg>
+                    <input type="email" id="Correo" name="Correo" placeholder="correo@dominio.com" required />
+                </div>
+            </div>
+            <div class="sigef-hint">Tu usuario y contraseña de acceso se asignarán a partir de tu número de documento.</div>
+
+            <div class="sigef-section-label">Rol en el sistema</div>
+
+            <div class="sigef-role-grid">
+                <label class="sigef-role-card">
+                    <input type="radio" name="Rol" value="Dispensador" required />
+                    <div class="box">
+                        <div class="role-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M10.5 20.5 3.5 13.5a5 5 0 1 1 7-7l9 9a5 5 0 1 1-7 7Z" />
+                                <path d="m8.5 8.5 7 7" />
+                            </svg>
+                        </div>
+                        <div class="role-name">Dispensador</div>
+                        <div class="role-desc">Acceso a dispensación, consulta de pendientes e inventario. Ideal para el mostrador.</div>
+                    </div>
+                </label>
+
+                <label class="sigef-role-card">
+                    <input type="radio" name="Rol" value="Administrador" required />
+                    <div class="box">
+                        <div class="role-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2 3 6v6c0 5 4 8.5 9 10 5-1.5 9-5 9-10V6l-9-4Z" />
+                                <path d="m9 12 2 2 4-4" />
+                            </svg>
+                        </div>
+                        <div class="role-name">Administrador</div>
+                        <div class="role-desc">Control total: compras, inventario, reportes, indicadores y administración.</div>
+                    </div>
+                </label>
+            </div>
+
+            <button type="submit" class="sigef-btn">Crear usuario</button>
+
+            <div class="sigef-create">
+                ¿Ya tienes una cuenta? <a href="/Index">Iniciar sesión</a>
+            </div>
+
+        </form>
+
+        <div class="sigef-footer">
+            Desarrollado por <strong>Jhan Estrada</strong>
+        </div>
+
+    </div>
+
+</body>
+</html>
